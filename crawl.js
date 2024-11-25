@@ -1,5 +1,18 @@
 const { JSDOM } = require("jsdom");
 
+async function crawlPage(currentURL){
+ console.log(`actively crawling:${currentURL}`) 
+
+  try {
+    
+  const resp = await fetch(currentURL)
+  console.log(await resp.text())
+
+  } catch (error) {
+   console.log(`error in fetch ${error.message} on current page ${currentURL}`) 
+  }
+}
+
 function getURLsFromHTML(htmlBody, baseURL) {
   const urls = [];
   const dom = new JSDOM(htmlBody);
@@ -43,4 +56,5 @@ function normalizeURL(urlString) {
 module.exports = {
   normalizeURL,
   getURLsFromHTML,
+  crawlPage,
 };
