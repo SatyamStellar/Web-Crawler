@@ -37,14 +37,64 @@ test('normalizeURL strip http',()=>{
 
 
 
-test(' getURLsFromHTML',()=>{
-    const input = `<html>
-<body>
-<a href="https://blog.boot.dev">Boot.dev Blog </a>
-</body>
-</html>`
-    const actual = normalizeURL(input)
-    const exected = 'blog.boot.dev/path'
+test(' getURLsFromHTML absolute',()=>{
+    const inputHTMLBody = `<html>
+                                <body>
+                                     <a href="https://blog.boot.dev/path/">Boot.dev Blog </a>
+                                </body>
+                            </html>`
+    const inputBaseURL = "https://blog.boot.dev/path/"
+    const actual = getURLsFromHTML(inputHTMLBody, inputBaseURL)
+    const exected =["https://blog.boot.dev/path/"]
+
+    expect(actual).toEqual(exected)
+})
+
+
+
+test(' getURLsFromHTML relative',()=>{
+    const inputHTMLBody = `<html>
+                                <body>
+                                     <a href="/path/">Boot.dev Blog </a>
+
+                                </body>
+                            </html>`
+    const inputBaseURL = "https://blog.boot.dev"
+    const actual = getURLsFromHTML(inputHTMLBody, inputBaseURL)
+    const exected =["https://blog.boot.dev/path/"]
+
+    expect(actual).toEqual(exected)
+})
+
+
+
+
+test(' getURLsFromHTML both',()=>{
+    const inputHTMLBody = `<html>
+                                <body>
+                                     <a href="https://blog.boot.dev/path1/">boot.dev blog 1</a>
+                                     <a href="/path2/">boot.dev blog 2</a>
+                                </body>
+                            </html>`
+    const inputBaseURL = "https://blog.boot.dev"
+    const actual = getURLsFromHTML(inputHTMLBody, inputBaseURL)
+    const exected =["https://blog.boot.dev/path1/","https://blog.boot.dev/path2/"]
+
+    expect(actual).toEqual(exected)
+})
+
+
+
+test(' getURLsFromHTML invalid',()=>{
+    const inputHTMLBody = `<html>
+                                <body>
+                                     <a href="invalid">Invalid Url</a>
+                                
+                                </body>
+                            </html>`
+    const inputBaseURL = "https://blog.boot.dev"
+    const actual = getURLsFromHTML(inputHTMLBody, inputBaseURL)
+    const exected =[]
 
     expect(actual).toEqual(exected)
 })
